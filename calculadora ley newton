@@ -1,0 +1,13 @@
+Proceso ley_newton
+	Definir masa, aceleracion, fuerza Como Real;
+	
+	Escribir "Escribe el valor de masa";
+	leer masa;
+	Escribir "Escribe el valor de aceleracion";
+	leer aceleracion;
+	
+	fuerza <- masa + aceleracion;
+	
+	Escribir "El resultado de fuerza es ", fuerza;
+	
+FinProceso
