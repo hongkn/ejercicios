@@ -1,0 +1,54 @@
+Proceso calculadorageometrica
+	Definir area, valor, altura, base, radio Como Real;
+	Definir figura como entero;
+	
+	Escribir "Calculadora de areas geometricas";
+	
+	Repetir
+		
+		Escribir "¿Cúal es tu figura?";
+		Escribir "1. Cuadrado";
+		Escribir "2. Circulo";
+		Escribir "3. Triangulo";
+		Escribir "4. Salir";
+		
+		leer figura;
+		
+		Si figura = 1 Entonces 
+			Escribir "Ingrese el valor del lado";
+			leer valor;
+			area <- valor * valor;
+			
+			Escribir "El area del cuadrado es: ", area;
+		FinSi
+		
+		Si figura = 2 Entonces
+			Escribir "Ingrese el valor del radio";
+			leer valor;
+			
+			area <- 3.14 * valor ^2;
+			
+			Escribir "El area del circulo es: ", area;
+			
+		FinSi
+		
+		Si figura = 3 Entonces
+			Escribir "Ingrese el valor de la altura";
+			leer altura;
+			
+			Escribir "Ingrese el valor de la base";
+			leer base;
+			
+			area <- altura * base;
+			
+			Escribir "El area del triangulo es: ", area;
+			
+		FinSi
+		
+		Si figura <> 1 Y figura <> 2 Y figura <> 3 Y figura <> 4 Entonces
+			Escribir "Figura inválida";
+		FinSi
+		
+Hasta Que figura = 4;
+	
+FinProceso
