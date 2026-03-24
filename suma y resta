@@ -1,0 +1,43 @@
+Proceso sumaryrestar
+	
+	Definir numero1, numero2, resultado, opcion como entero;
+
+	Escribir "Calculadora";
+	Escribir "***";
+	
+	Repetir
+		Escribir "Menu de opciones";
+		Escribir "Elige una de las opciones: ";
+		Escribir "1. Restar";
+		Escribir "2. Sumar";
+		Escribir "3. Salir";
+		leer opcion;
+		
+		Segun opcion hacer 
+			1: Escribir "Ingrese el primer numero";
+				leer numero1;
+				
+				Escribir "Ingrese el segundo numero";
+				leer numero2;
+				
+				resultado <- numero1 - numero2;
+				
+				Escribir "La resta es: ", resultado;
+				
+			2: Escribir "Ingrese el primer numero";
+				leer numero1;
+				
+				Escribir "Ingrese el segundo numero";
+				leer numero2;
+				
+				resultado <- numero1 + numero2;
+				
+				Escribir "La suma es: ", resultado;
+				
+			3: Escribir "Has salido de la calculadora";
+				
+			De otro modo: 
+				Escribir "Opcion invalida";
+		FinSegun
+	Hasta que opcion == 3
+FinProceso
