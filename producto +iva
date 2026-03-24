@@ -1,0 +1,14 @@
+Proceso cajaregistradora
+	Definir producto, tasa, iva Como Real;
+	tasa = 0.16;
+	
+	Escribir "Dime el valor de tu producto";
+	leer producto;
+	
+	iva = producto + (producto * tasa);
+	
+	Escribir "El valor de tu producto sin iva es: ", producto; 
+	Escribir "El valor de tu producto con iva es: ", iva;
+	
+	
+FinProceso
