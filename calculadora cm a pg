@@ -1,0 +1,11 @@
+Proceso calculadora_cmpg
+	Definir centimetro, pulgada Como Real;
+	
+	Escribir "Dime tu dato en centimetros";
+	leer centimetro;
+	
+	pulgada = centimetro / 2.54;
+	
+	Escribir "Tu dato en pulgadas es: ", pulgada;
+	
+FinProceso
