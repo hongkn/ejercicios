@@ -1,0 +1,54 @@
+Proceso descuento
+	Definir compra, cliente, resultado como entero;
+	Definir premium como real;
+	cliente <- 0;
+	
+	Mientras cliente <> 3 hacer
+		Escribir "*******************************";
+		Escribir "Bienvenido al sistema de descuento";
+		Escribir "Ingrese el total de su compra";
+		leer compra;
+		
+		Repetir
+			Si compra <=0 Entonces 
+				Escribir "Error: numero no reconocido";
+				leer compra;
+			FinSi
+		Hasta que compra > 0
+		
+		Escribir "¿Eres cliente NORMAL o PREMIUM?";
+		Escribir "1. Normal";
+		Escribir "2. Premium";
+		Escribir "3. Salir";
+		leer cliente;
+		
+		Repetir
+			Si cliente <> 3 y cliente <> 1 y cliente <> 2 Entonces
+				Escribir "Error: ingrese un numero del 1-3";
+				leer cliente;
+			FinSi
+		Hasta que cliente = 1 o cliente = 2 o cliente = 3;
+		
+		Si cliente == 2 Entonces
+			Si compra >= 30000 entonces
+				Escribir "Descuento a aplicar por ser cliente PREMIUM: 15%";
+				resultado <- compra - (compra * 0.15);
+				Escribir "El total de tu compra es: ", resultado;
+			SiNo
+				Escribir "Descuento a aplicar por ser cliente PREMIUM: 0%";
+				Escribir "Para aplicar el descuento el total de tu compra debe ser mayor o igual a $30.0000";
+				Escribir "El total de tu compra es: ", compra;
+			FinSi
+		FinSi
+		Si cliente == 1 Entonces
+			Escribir "Descuento a aplicar: 0%";
+			Escribir "El total de tu compra es de: ", compra;
+		FinSi
+		
+		
+	Finmientras
+	
+	
+	Escribir "Fin del proceso";
+
+FinProceso
