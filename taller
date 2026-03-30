@@ -1,0 +1,52 @@
+Proceso puntajecalculadora
+    Definir op, cantidad, num, mayor, menor, i, puntaje, total como entero;
+	mayor <- 0;
+	menor <- 0;
+	op <- 0;
+	num <- 0;
+	
+    Escribir "Registro de puntajes";
+	
+	Repetir
+		Escribir "1. Registrar puntajes";
+		Escribir "2. Mostrar analisis del puntaje";
+		Escribir "3. Salir";
+		leer op;
+		
+		Segun op hacer
+			1:
+				Escribir "Ingresa la cantidad de puntajes a registrar";
+				leer cantidad;
+				i <- 1;
+				Si cantidad >= 3 Entonces
+					mientras i <= cantidad hacer
+						Escribir "Ingresa un numero";
+						leer num;
+						si i == 1 Entonces
+							mayor = num;
+							menor = num;
+						SiNo
+							si num > mayor Entonces
+								mayor = num;
+							FinSi
+						FinSi
+						i <- i + 1;
+					FinMientras
+				SiNo
+					Repetir
+						Escribir "Tu cantidad de numeros debe ser mayor o igual a 3";
+						leer num;
+					Hasta que cantidad >= 3
+				FinSi
+			2:
+				Escribir "El mayor puntaje registrado es: ", mayor;
+				Si mayor >= 80 Entonces
+					Escribir "Puntaje alto";
+				sino 
+					Escribir "Puntaje por mejorar";
+				FinSi
+			3: Escribir "Fin del registro";
+				
+		FinSegun
+	Hasta que op == 3;
+FinProceso
