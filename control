@@ -1,0 +1,51 @@
+Proceso control
+	Definir ventas, op, monto, total, mayor,resumen, contador2, cantidad, contador como entero;
+	op <- 0;
+	cantidad <- 0;
+	contador2 <- 0;
+	mayor <- 0;
+	total <- 0;
+	
+	Escribir "Menu:";
+	
+	Repetir
+		Escribir "1. Registrar ventas del dia";
+		Escribir "2. Mostrar resumen";
+		Escribir "3. Salir";
+		leer op;
+		
+		Segun op hacer
+			1: 
+				Escribir "Ingrese la cantidad de ventas a registrar";
+				leer cantidad;
+				si cantidad >= 2 Entonces
+					contador <- 0;
+					Mientras contador < cantidad hacer;
+						Escribir "Introduzca el monto";
+						leer monto;
+						total = total + monto;
+						Si monto > mayor Entonces
+							mayor = monto;
+						FinSi
+						contador = contador + 1;
+						Si monto > 10000 entonces
+							contador2 = contador2 + 1;
+						FinSi
+					FinMientras
+				
+				FinSi
+			2: 
+				Escribir "El total acomulado es: ", total;
+				Escribir "La venta mas alta fue: ", mayor;
+				Escribir "La cantidad de ventas que superaron los $10.000 es: ", contador2;
+				Si total > 50000 Entonces
+					Escribir "Meta del dia cumplida";
+				SiNo
+					Escribir "Meta del dia no alcanzada";
+				FinSi
+			3: 
+				Escribir "Cierre de caja";
+		FinSegun
+	Hasta que op = 3
+	
+FinProceso
