@@ -1,8 +1,6 @@
 consolas = {}  # "siglas": ["nombre", "fabricante", "año"]
 ventas = {}    # "siglas": [precio, stock]
 
-# --- Funciones de Menú ---
-
 def mostrar_menu():
     print("\n" + "="*40)
     print(" "*5 + "ADMINISTRACIÓN DE CONSOLAS")
@@ -20,8 +18,6 @@ def elegir_opcion():
             return int(input("Ingresa la opción: "))
         except ValueError:
             print("Error: Solo se permiten números enteros.")
-
-# --- Funciones de Validación ---
 
 def no_existe_sigla(sigla, consolas):
     return sigla not in consolas
@@ -43,8 +39,6 @@ def validar_precio(precio):
 
 def validar_stock(stock):
     return isinstance(stock, int) and stock >= 0
-
-# --- Función Principal (Agregar) ---
 
 def agregar_consola(consolas, ventas):
     while True:
@@ -100,7 +94,6 @@ def agregar_consola(consolas, ventas):
     ventas[sigla] = [precio, stock]
     print(f"\n¡Consola {sigla} agregada con éxito!")
 
-# --- Opción 2: Buscar ---
 def buscar_consola(dicc_consolas, dicc_ventas, sigla_buscar=None):
     if sigla_buscar is None:
         sigla_buscar = input("Ingresa la sigla de la consola a buscar: ")
@@ -117,25 +110,21 @@ def buscar_consola(dicc_consolas, dicc_ventas, sigla_buscar=None):
         print(f"Nombre      : {nombre}")
         print(f"Fabricante  : {fabricante}")
         print(f"Año lanz.   : {anio}")
-        print(f"Precio      : ${precio:,.2f}") # Agregado :,.2f para cumplir formato del enunciado
+        print(f"Precio      : ${precio:,.2f}") 
         print(f"Stock       : {stock} unidades")
         return True
     else:
         print(f"\nError: La consola con sigla '{sigla_buscar}' no se encontró.")
         return False
 
-# --- Opción 3: Eliminar ---
 def eliminar_consola(consolas, ventas): 
     sigla = input("Ingresa la sigla de la consola para eliminar: ")
 
-    # CORRECCIÓN: Invocamos obligatoriamente a buscar_consola para validar si existe
     if buscar_consola(consolas, ventas, sigla):
         del consolas[sigla]
         del ventas[sigla]
         print(f"\n¡Éxito! La consola '{sigla}' ha sido eliminada.")
-    # El "Else" ya no es necesario aquí porque buscar_consola ya avisa si no existe
 
-# --- Opción 4: Mostrar todas ---
 def mostrar_consolas(consolas, ventas):
     if len(consolas) == 0:
         print("\n" + "="*30)
@@ -153,14 +142,12 @@ def mostrar_consolas(consolas, ventas):
         anio = consolas[sigla][2]
         precio = ventas[sigla][0]
         stock = ventas[sigla][1]
-        # Agregado :,.2f al precio para que coincida con el enunciado original
+        
         print(f"Sigla: {sigla} | {nombre} | {fabricante} | {anio} | ${precio:,.2f} | Stock: {stock}")
 
-    # CORRECCIÓN: Esto va fuera del ciclo for para que se imprima solo al final
     print("==============================")
     print(f"Total de consolas: {len(consolas)}\n")
 
-# --- MENÚ PRINCIPAL ---
 while True:
     mostrar_menu()
     opcion = elegir_opcion()
@@ -168,7 +155,7 @@ while True:
     if opcion == 1:
         agregar_consola(consolas, ventas)
     elif opcion == 2:
-        buscar_consola(consolas, ventas) # CORRECCIÓN: Opción 2 es para buscar
+        buscar_consola(consolas, ventas)
     elif opcion == 3:
         eliminar_consola(consolas, ventas)
     elif opcion == 4:
