@@ -1,0 +1,289 @@
+# =====================================================================
+# DICCIONARIOS BASE (Estructura de datos conectada por la misma llave)
+# =====================================================================
+arreglos = {
+    'FLO1': ['Ramo Primavera', 'ramo', 'rosado', 'M', True, 'primavera'],
+    'FLO2': ['Caja Elegante', 'caja', 'blanco', 'L', True, 'todo año'],
+    'FLO3': ['Ramo Solar', 'ramo', 'amarillo', 'S', False, 'verano'],
+    'FLO4': ['Centro Mesa', 'centro', 'rojo', 'M', True, 'todo año'],
+    'FLO5': ['Ramo Bosque', 'ramo', 'verde', 'L', False, 'otoño'],
+    'FLO6': ['Caja Noche', 'caja', 'morado', 'M', True, 'invierno'],
+} 
+
+bodega = {
+    'FLO1': [15990, 8],
+    'FLO2': [29990, 3],
+    'FLO3': [9990, 12],
+    'FLO4': [24990, 5],
+    'FLO5': [19990, 0],
+    'FLO6': [22990, 6]
+} 
+
+# =====================================================================
+# FUNCIONES DE VALIDACIÓN (Robustez y control de errores)
+# =====================================================================
+
+def leer_opcion():
+    """Valida que el usuario elija una opción correcta del menú principal."""
+    while True:
+        try:
+            op = int(input("Ingrese opción: "))
+            if 1 <= op <= 6:
+                return op
+            print("Solo deben ser números del 1 al 6")
+        except ValueError:
+            print("Error: Solo se aceptan números enteros")
+
+def no_existe_codigo(codigo, arreglos):
+    """Devuelve True si el código NO está en el diccionario (útil para agregar)."""
+    return codigo not in arreglos
+
+# Validaciones de texto: .strip() elimina espacios fantasmas (ej: "   ")
+def validar_codigo(codigo): return len(codigo.strip()) > 0    
+def validar_nombre(nombre): return len(nombre.strip()) > 0    
+def validar_tipo(tipo): return len(tipo.strip()) > 0
+def validar_color(color): return len(color.strip()) > 0    
+def validar_temporada(temporada): return len(temporada.strip()) > 0  
+
+def validar_tamaño(tamaño):
+    """Filtra opciones específicas usando comparaciones directas."""
+    return tamaño == "S" or tamaño == "M" or tamaño == "L"
+
+def validar_incluye_tarjeta(si_no):
+    """
+    OJO AQUÍ: Solo verifica si el texto ingresado es válido ('s' o 'n').
+    No debe transformar a Booleano aquí porque rompería el flujo del menú.
+    """
+    return si_no in ["s", "n"]
+    
+def validar_precio(precio):
+    return isinstance(precio, int) and precio > 0    
+
+def validar_unidades(unidades):
+    return isinstance(unidades, int) and unidades >= 0    
+
+
+# =====================================================================
+# FUNCIONES LÓGICAS (Procesamiento de datos)
+# =====================================================================
+
+def buscar_codigo(codigo):
+    """
+    OJO AQUÍ (¡CRÍTICO!): El 'return False' va FUERA del for.
+    Si lo pones dentro de un 'else' en el for, solo revisará el primer elemento.
+    """
+    for codigo_buscado in arreglos:
+        if codigo_buscado == codigo:
+            return True
+    return False
+
+def unidades_tipo(tipo):
+    """Acumula las unidades de la bodega buscando por tipo en arreglos."""
+    tipo_buscado = tipo.lower()
+    total_acumulado = 0
+    # OJO AQUÍ: Usamos .items() porque necesitamos la llave (codigo) para ir a buscar a 'bodega'
+    for codigo, info_arreglo in arreglos.items():
+        if info_arreglo[1].lower() == tipo_buscado:
+            unidades_disponibles = bodega[codigo][1] # Conectamos usando la misma llave
+            total_acumulado += unidades_disponibles
+    print(f"El total de unidades disponibles para el tipo {tipo} es: {total_acumulado}")
+
+def busqueda_precio(p_min, p_max):
+    """Busca arreglos en un rango de precios y los muestra ordenados."""
+    resultados = []
+    for codigo, info_bodega in bodega.items():
+        precio = info_bodega[0]
+        unidades = info_bodega[1]
+        # OJO AQUÍ: El requerimiento dice que debe haber stock (unidades > 0)
+        if p_min <= precio <= p_max and unidades > 0:
+            nombre_arreglo = arreglos[codigo][0]
+            formato = f"{nombre_arreglo}--{codigo}"
+            resultados.append(formato)
+
+    if len(resultados) == 0:
+        print("No hay arreglos en ese rango de precios.")
+    else:
+        resultados.sort() # OJO: Modifica la lista original ordenándola alfabéticamente
+        print("=== Arreglos encontrados ===")
+        for item in resultados:
+            print(item)
+
+def actualizar_precio(codigo, nuevo_precio):
+    """Modifica el precio en el diccionario bodega si el código existe."""
+    # OJO AQUÍ: Llamamos a buscar_codigo pasándole el parámetro en el IF directamente
+    if buscar_codigo(codigo):
+        bodega[codigo][0] = nuevo_precio # Accedemos a la llave y luego a la posición 0 (precio)
+        return True
+    return False
+    
+def eliminar_arreglo(codigo):
+    """Elimina el arreglo de AMBOS diccionarios si este existe."""
+    # OJO AQUÍ: Se elimina si SÍ existe. Si no existe, 'del' lanzará un error (KeyError)
+    if buscar_codigo(codigo):
+        del arreglos[codigo]
+        del bodega[codigo]
+        return True
+    return False
+
+def agregar_arreglo(codigo, nombre, tipo, color_principal, tamaño, incluye_tarjeta, temporada, precio, unidades):
+    """Inserta un nuevo elemento en ambos diccionarios."""
+    if not buscar_codigo(codigo):
+        # Guardamos como listas dentro de la llave 'codigo'
+        arreglos[codigo] = [nombre, tipo, color_principal, tamaño, incluye_tarjeta, temporada]
+        bodega[codigo] = [precio, unidades]
+        return True
+    return False
+
+# =====================================================================
+# MENÚ PRINCIPAL (Flujo de la aplicación con Whiles independientes)
+# =====================================================================
+while True:
+    print("\n========== MENÚ PRINCIPAL ==========")
+    print("1. Unidades por tipo de arreglo")
+    print("2. Búsqueda de arreglos por rango de precio")
+    print("3. Actualizar precio de arreglo")
+    print("4. Agregar arreglo")
+    print("5. Eliminar arreglo")
+    print("6. Salir")
+    print("=====================================")
+
+    op = leer_opcion()
+
+    if op == 1:
+        while True:
+            tipo_arreglo = input("Ingrese tipo de arreglo a consultar: ")
+            encontrado = False
+            # OJO AQUÍ: Buscamos en todo el diccionario usando una bandera 'encontrado'
+            for codigo, datos in arreglos.items():
+                if tipo_arreglo.lower() == datos[1].lower():
+                    encontrado = True
+                    break
+            
+            # OJO: La decisión se toma FUERA del ciclo for
+            if encontrado:
+                unidades_tipo(tipo_arreglo)
+                break
+            else:
+                print("El tipo de arreglo no se encuentra en el sistema. Intente de nuevo.")
+                    
+    if op == 2:
+        # OJO AQUÍ: Doble while independiente para que si falla el precio_max, NO repita el precio_min
+        while True:
+            try:
+                precio_min = int(input("Ingrese precio mínimo: "))
+                if precio_min >= 0:
+                    break
+                print("Debe ser un número entero mayor o igual a 0.")
+            except ValueError:
+                print("Debe ingresar valores enteros.")
+
+        while True:
+            try:
+                precio_max = int(input("Ingrese el precio máximo: "))
+                if precio_max > precio_min:
+                    break
+                print(f"Debe ser un precio mayor a tu precio mínimo ({precio_min})")
+            except ValueError:
+                print("Debe ingresar valores enteros.")
+
+        busqueda_precio(precio_min, precio_max)
+
+    if op == 3:
+        while True:
+            codigo = input("Ingrese código del arreglo: ").upper()
+            if not buscar_codigo(codigo):
+                print("El codigo no existe en el sistema.")
+                # Bucle secundario para preguntar si desea continuar o salir al menú
+                while True:
+                    respuesta = input("¿Desea intentar con otro código? (s/n): ").lower()
+                    if respuesta in ["s", "n"]: break
+                    print("Solo se admite: (s/n)")
+                if respuesta == "n": break
+            else: 
+                while True:
+                    try:
+                        precio_nuevo = int(input("Ingresa nuevo precio: "))
+                        if precio_nuevo > 0:
+                            actualizar_precio(codigo, precio_nuevo)
+                            print("Precio actualizado con éxito.")
+                            break
+                        print("Debe ser un valor mayor a 0.")
+                    except ValueError:
+                        print("Debe ingresar valores enteros.")
+                break # Rompe el ciclo del código una vez actualizado
+
+    if op == 4:
+        # OJO AQUÍ: Secuencia de Whiles para validar campo por campo
+        while True: 
+            codigo = input("Ingrese el codigo del arreglo: ").upper()
+            if validar_codigo(codigo) and no_existe_codigo(codigo, arreglos):
+                break
+            print("Codigo inválido o ya registrado.")
+
+        while True:
+            nombre = input("Ingrese nombre: ")
+            if validar_nombre(nombre): break
+            print("Nombre inválido.")
+        
+        while True:
+            tipo = input("Ingrese tipo: ")
+            if validar_tipo(tipo): break
+            print("Tipo inválido.")        
+
+        while True:
+            color = input("Ingrese color principal: ")
+            if validar_color(color): break
+            print("Color inválido.")
+
+        while True:
+            tamanio = input("Ingrese tamaño (S/M/L): ").upper()
+            if validar_tamaño(tamanio): break
+            print("Tamaño invalido. Ingrese S, M o L.")           
+            
+        while True:
+            tarjeta_input = input("¿Incluye tarjeta? (s/n): ").lower()
+            if validar_incluye_tarjeta(tarjeta_input):
+                # OJO: Aquí recién lo transformamos a Booleano (True/False) antes de guardar
+                tarjeta = True if tarjeta_input == "s" else False
+                break
+            print("Respuesta inválida. Ingrese 's' o 'n'.")
+
+        while True:
+            temporada = input("Ingrese temporada: ")
+            if validar_temporada(temporada): break
+            print("Temporada inválida.")
+
+        # OJO AQUÍ: En los números usamos try/except y LUEGO la función de validación
+        while True:
+            try:
+                precio = int(input("Ingrese precio: "))
+                if validar_precio(precio): break
+                print("Precio inválido. Debe ser mayor a 0.")
+            except ValueError:
+                print("Error: Solo se admiten números enteros.")
+
+        while True:
+            try:
+                unidades = int(input("Ingrese unidades: "))
+                if validar_unidades(unidades): break
+                print("Unidades inválidas. Debe ser mayor o igual a 0.")
+            except ValueError:
+                print("Error: Solo se admiten números enteros.")     
+
+        # Una vez que pasamos todas las aduanas, mandamos los datos limpios a la función
+        agregar_arreglo(codigo, nombre, tipo, color, tamanio, tarjeta, temporada, precio, unidades)
+        print("Arreglo ingresado con éxito.")
+
+    if op == 5:
+        while True:
+            codigo_eliminar = input("Ingresa el codigo que desea eliminar: ").upper()
+            # Si no es verdad que no existe (es decir, si existe), lo borra
+            if not no_existe_codigo(codigo_eliminar, arreglos):
+                eliminar_arreglo(codigo_eliminar)
+                print("Arreglo eliminado con éxito.")
+                break
+            print("Codigo inexistente en el sistema.")
+
+    if op == 6:
+        print("Programa finalizado. ¡Gracias!")
+        break
