@@ -1,0 +1,150 @@
+
+#"num_serie": ["titulo", "plataforma", "genero", "clasificacion", "original"]
+peliculas = {
+'S001': ['Stranger Things', 'Netflix', 'Ciencia Ficcion', 'TEEN', True],
+'S002': ['The Mandalorian', 'Disney+', 'Sci-Fi', 'TEEN', False],
+'S003': ['The Boys', 'Prime Video', 'Accion', '18+', False]
+}
+
+#"num_serie": ["precio_arriendo", "reproducciones"]
+metricas = {
+'S001': [0, 450],
+'S002': [2500, 120],
+'S003': [0, 890]
+}
+
+def validar_titulo(titulo):
+    return len(titulo.strip()) > 0
+
+def validar_plataforma(plataforma):
+    return len(plataforma.strip()) > 0
+
+def validar_genero(genero):
+    return len(genero.strip()) > 0
+
+def validar_clasificacion(clasificacion):
+    return clasificacion.upper() in ("TEEN", "18+")
+
+def validar_original(original):
+    return original.lower() in ("s", "n")
+
+def validar_precio(precio):
+    return isinstance(precio, int) >= 0
+    
+def validar_reproducciones(repro):
+    return isinstance(repro, int) >= 0
+
+def total_reproducciones(plataforma):
+    plataforma_buscado = plataforma.lower()
+    total = 0
+
+    for codigo, datos in peliculas.items():
+        if datos[1].lower() == plataforma_buscado:
+            cantidad_reproducciones = metricas[codigo][1]
+            total += cantidad_reproducciones
+
+    print(f"El total de reproducciones en la plataforma '{plataforma}' es: {total}")
+
+def buscar_por_visitas(min_vistas, max_vistas):
+    if min_vistas < 0 or max_vistas < 0 or min_vistas > max_vistas:
+        return
+    
+    cantidad = []
+
+    for codigo, datos in metricas.items():
+        vistas_serie = datos[1]
+
+        if min_vistas <= vistas_serie <= max_vistas:
+            formato = (f"{datos[1]} -- {codigo}")
+            cantidad.append(formato)
+
+    if not cantidad:
+        print("No hay series en ese rango de reproducciones.")
+    else:
+        cantidad.sort()
+        print("=== SERIES ENCONTRADAS ===")
+        for item in cantidad:
+            print(item)
+
+def actualizar_precio(codigo, nuevo_precio):
+    
+    for llave in metricas.items():
+        if codigo == llave:
+            metricas[llave][0] = nuevo_precio
+            return True
+        return False
+    
+def eliminar_serie(codigo):
+
+    codigo_validado = codigo.upper()
+
+    for llave in peliculas.items():
+        if codigo_validado == llave:
+            del peliculas[codigo_validado]
+            del metricas[codigo_validado]
+            return True
+        return False
+
+while True:
+    print("========== MENÚ PRINCIPAL ==========")
+    print("1. Total de reproducciones por plataforma")
+    print("2. Búsqueda de series por rango de vistas")
+    print("3. Actualizar precio de arriendo")
+    print("4. Agregar nueva serie")
+    print("5. Eliminar serie")
+    print("6. Salir")
+    print("=====================================")
+
+
+    while True:
+        try:
+            op = int(input("Ingrese opción: "))
+            break
+        except ValueError:
+            print("Solo se permiten números enteros.")
+
+    if op == 1:
+
+        while True:
+            plataforma = input("Ingrese plataforma a consultar: ").lower()
+
+            plataforma_encontrada = False
+
+            for codigo, datos in peliculas.items():
+                plataforma_buscada = datos[1]
+                
+                if plataforma_encontrada:
+                    break
+            if plataforma_encontrada:
+                total_reproducciones(plataforma)
+                break
+            else:
+                print("La plataforma ingresada no existe en el sistema.")
+    
+    if op == 2:
+        
+        while True:
+            try:
+                min_vistas = int("Ingrese vistas mínimas: ")
+
+                if min_vistas < 0:
+                    print("Debe ser un número mayor o igual a 0.")
+                    continue
+                break
+            except ValueError:
+                print("Solo se permiten números enteros.")
+
+        while True:
+            try:
+                max_vistas = int("Ingrese vistas máximas(en miles): ")
+
+                if max_vistas <= min_vistas:
+                    print("Debe ser un número mayor a las vistas mínimas")
+                    continue
+                break
+            except ValueError:
+                print("Solo se permiten números enteros.")
+
+        buscar_por_visitas(min_vistas, max_vistas)
+
+    if op == 3:
